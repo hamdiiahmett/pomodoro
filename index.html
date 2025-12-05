@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#e6ded6">
+    <title>ÇALIŞ KÖLE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- RENK PALETLERİ (CSS VARIABLES) --- */
+        :root {
+            /* Varsayılan: Bej Mod (Attığın görseldeki tonlar) */
+            --bg-color: #e6ded6;
+            --card-bg: #f5f0eb;
+            --text-main: #5d4037;
+            --text-muted: #8d6e63;
+            --accent-color: #8d6e63; /* Kahvemsi bronz */
+            --accent-hover: #5d4037;
+            --shadow-light: -8px -8px 16px rgba(255, 255, 255, 0.6);
+            --shadow-dark: 8px 8px 16px rgba(93, 64, 55, 0.15);
+            --radius: 24px;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --ring-color: #d7ccc8;
+        }
+
+        /* Koyu Mod (Dark Theme) */
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --accent-color: #ff5555; /* Dracula Red */
+            --accent-hover: #ff79c6;
+            --shadow-light: -4px -4px 10px rgba(255, 255, 255, 0.05);
+            --shadow-dark: 5px 5px 15px rgba(0, 0, 0, 0.5);
+            --ring-color: #2c2c2c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-main);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* --- ÜST KISIM VE THEME SWITCHER --- */
+        header {
+            padding: 30px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        h1 {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            cursor: pointer;
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            transition: transform 0.2s;
+        }
+        
+        .theme-toggle:active { transform: scale(0.9); }
+
+        /* --- ANA İÇERİK --- */
+        main {
+            flex: 1;
+            padding: 10px 20px;
+            max-width: 550px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .welcome-text {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        
+        .welcome-text span {
+            color: var(--text-main);
+            font-weight: 800;
+        }
+
+        /* --- MENU GRID --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card:hover { transform: translateY(-3px); }
+        .card:active { transform: scale(0.98); }
+
+        .card i {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        /* --- GİZLİ ELEMENTLER --- */
+        .hidden { display: none !important; }
+
+        /* --- TIMER --- */
+        .timer-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+        }
+
+        .timer-circle {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 8px solid var(--bg-color); /* İç halka efekti */
+        }
+        
+        /* Görseldeki gibi ikinci bir halka */
+        .timer-circle::after {
+            content: '';
+            position: absolute;
+            width: 210px;
+            height: 210px;
+            border-radius: 50%;
+            border: 4px solid var(--ring-color);
+            opacity: 0.5;
+        }
+
+        .timer-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            z-index: 2;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            background: var(--card-bg);
+            color: var(--accent-color);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            transition: all 0.2s;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            box-shadow: inset 5px 5px 10px rgba(0,0,0,0.1), inset -5px -5px 10px rgba(255,255,255,0.5);
+            transform: scale(0.95);
+        }
+
+        /* --- PLANNER --- */
+        .planner-day {
+            background: var(--card-bg);
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .planner-day h4 { 
+            color: var(--accent-color); 
+            margin-bottom: 8px; 
+            font-size: 0.9rem;
+        }
+
+        textarea {
+            width: 100%;
+            background: var(--bg-color);
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 50px;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05), inset -2px -2px 5px rgba(255,255,255,0.5);
+        }
+        textarea:focus { outline: none; }
+
+        /* --- STATS --- */
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+        }
+
+        .stat-val { font-weight: 800; color: var(--accent-color); font-size: 1.2rem; }
+
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 200px;
+            padding: 20px 5px 5px 5px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            margin-top: 20px;
+        }
+
+        .bar-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 13%;
+            height: 100%;
+            justify-content: flex-end;
+        }
+
+        .bar {
+            width: 100%;
+            background: var(--accent-color);
+            border-radius: 5px;
+            transition: height 0.5s ease;
+            min-height: 6px;
+            opacity: 0.8;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .bar-label {
+            margin-top: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        /* --- BACK BUTTON --- */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .back-btn:hover { color: var(--accent-color); }
+
+        /* --- TOAST --- */
+        #toast {
+            visibility: hidden;
+            background: var(--text-main);
+            color: var(--bg-color);
+            text-align: center;
+            border-radius: 50px;
+            padding: 12px 24px;
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            opacity: 0;
+            transition: 0.3s;
+            z-index: 100;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ÇALIŞ KÖLE</h1>
+        <button class="theme-toggle" onclick="app.toggleTheme()">
+            <i class="fas fa-adjust"></i>
+        </button>
+    </header>
+
+    <main id="app">
+        <section id="view-dashboard">
+            <div class="welcome-text">
+                Hoş Geldin,<br>
+                <span>Baboli Mugo Pro!</span>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card" onclick="app.router('timer')">
+                    <i class="fas fa-stopwatch"></i>
+                    <h3>Sayaç</h3>
+                </div>
+                <div class="card" onclick="app.router('planner')">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Planlayıcı</h3>
+                </div>
+                <div class="card" onclick="app.router('stats')">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>İstatistik</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-timer" class="hidden">
+            <div class="back-btn" onclick="app.router('dashboard')">
+                <i class="fas fa-arrow-left"></i> Geri Dön
+            </div>
+            
+            <div class="timer-wrapper">
+                <div class="timer-circle">
+                    <div class="timer-display" id="timerDisplay">25:00</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="btnStart" class="btn" onclick="timer.start()"><i class="fas fa-play"></i> Başla</button>
+                <button id="btnPause" class="btn hidden" onclick="timer.pause()"><i class="fas fa-pause"></i> Dur</button>
+                <button id="btnFinish" class="btn" onclick="timer.finish()"><i class="fas fa-stop"></i> Bitir</button>
+            </div>
+            <p style="text-align:center; margin-top:30px; color:var(--text-muted); font-size: 0.8rem; letter-spacing: 1px;">MESAİ BAŞLADI.</p>
+        </section>
+
+        <section id="view-planner" class="hidden">
+            <div class="back-btn" onclick="app.router('dashboard')">
+                <i class="fas fa-arrow-left"></i> Geri Dön
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2>Haftalık Kölelik</h2>
+                <button class="btn" style="padding: 8px 16px; font-size:0.8rem;" onclick="planner.clearAll()">Sil</button>
+            </div>
+            <div id="plannerContainer">
+                </div>
+            <br>
+            <button class="btn" style="width:100%; justify-content:center;" onclick="planner.save()">Kaydet</button>
+        </section>
+
+        <section id="view-stats" class="hidden">
+            <div class="back-btn" onclick="app.router('dashboard')">
+                <i class="fas fa-arrow-left"></i> Geri Dön
+            </div>
+            <h2>Verimlilik Raporu</h2>
+            <br>
+            <div class="stat-row">
+                <span>Bugün</span>
+                <span class="stat-val" id="statToday">0 dk</span>
+            </div>
+            <div class="stat-row">
+                <span>Bu Hafta Toplam</span>
+                <span class="stat-val" id="statWeekTotal">0s 0dk</span>
+            </div>
+
+            <h3 style="margin-top:25px; font-size:1rem; color:var(--text-muted);">Bu Hafta (Pzt - Paz)</h3>
+            <div class="chart-container" id="chartContainer">
+                </div>
+        </section>
+    </main>
+
+    <div id="toast">Kaydedildi Baboli!</div>
+
+    <script>
+        const app = {
+            init: () => {
+                // Theme Check
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                
+                planner.render();
+                stats.calculate();
+            },
+
+            toggleTheme: () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const newTheme = current === 'light' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            },
+
+            router: (view) => {
+                document.querySelectorAll('section').forEach(el => el.classList.add('hidden'));
+                document.getElementById(`view-${view}`).classList.remove('hidden');
+                if(view === 'stats') stats.render();
+                if(view === 'planner') planner.render();
+            },
+
+            showToast: (msg) => {
+                const t = document.getElementById('toast');
+                t.innerText = msg;
+                t.className = 'show';
+                setTimeout(() => t.className = '', 3000);
+            }
+        };
+
+        const timer = {
+            duration: 25 * 60,
+            timeLeft: 25 * 60,
+            interval: null,
+            isRunning: false,
+
+            update: () => {
+                const m = Math.floor(timer.timeLeft / 60).toString().padStart(2,'0');
+                const s = (timer.timeLeft % 60).toString().padStart(2,'0');
+                document.getElementById('timerDisplay').innerText = `${m}:${s}`;
+                document.title = `${m}:${s} - Çalış Köle`;
+            },
+
+            start: () => {
+                if(timer.isRunning) return;
+                timer.isRunning = true;
+                document.getElementById('btnStart').classList.add('hidden');
+                document.getElementById('btnPause').classList.remove('hidden');
+                
+                timer.interval = setInterval(() => {
+                    timer.timeLeft--;
+                    timer.update();
+                    if(timer.timeLeft <= 0) timer.finish();
+                }, 1000);
+            },
+
+            pause: () => {
+                clearInterval(timer.interval);
+                timer.isRunning = false;
+                document.getElementById('btnStart').innerText = "Devam";
+                document.getElementById('btnStart').classList.remove('hidden');
+                document.getElementById('btnPause').classList.add('hidden');
+            },
+
+            finish: () => {
+                clearInterval(timer.interval);
+                const elapsed = timer.duration - timer.timeLeft;
+                if(elapsed > 10) {
+                    stats.save(elapsed);
+                    app.showToast(`Helal! ${Math.floor(elapsed/60)} dk çalıştın.`);
+                }
+                timer.timeLeft = timer.duration;
+                timer.isRunning = false;
+                timer.update();
+                document.getElementById('btnStart').innerText = "Başla";
+                document.getElementById('btnStart').classList.remove('hidden');
+                document.getElementById('btnPause').classList.add('hidden');
+            }
+        };
+
+        const planner = {
+            days: ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'],
+            render: () => {
+                const container = document.getElementById('plannerContainer');
+                container.innerHTML = '';
+                const data = JSON.parse(localStorage.getItem('plans')) || {};
+                
+                planner.days.forEach(day => {
+                    const div = document.createElement('div');
+                    div.className = 'planner-day';
+                    div.innerHTML = `<h4>${day}</h4><textarea id="p-${day}" placeholder="Hedef gir...">${data[day]||''}</textarea>`;
+                    container.appendChild(div);
+                });
+            },
+            save: () => {
+                const data = {};
+                planner.days.forEach(d => {
+                    data[d] = document.getElementById(`p-${d}`).value;
+                });
+                localStorage.setItem('plans', JSON.stringify(data));
+                app.showToast('Planlar Kaydedildi');
+            },
+            clearAll: () => {
+                if(confirm('Hepsini siliyorum bak?')) {
+                    localStorage.removeItem('plans');
+                    planner.render();
+                }
+            }
+        };
+
+        const stats = {
+            save: (sec) => {
+                const date = new Date().toISOString().split('T')[0];
+                let hist = JSON.parse(localStorage.getItem('history')) || {};
+                if(!hist[date]) hist[date] = 0;
+                hist[date] += sec;
+                localStorage.setItem('history', JSON.stringify(hist));
+            },
+            calculate: () => {}, // placeholder
+            render: () => {
+                const hist = JSON.parse(localStorage.getItem('history')) || {};
+                const today = new Date().toISOString().split('T')[0];
+                
+                // Bugün
+                document.getElementById('statToday').innerText = `${Math.floor((hist[today]||0)/60)} dk`;
+
+                // Haftalık Grafik (Pzt - Paz)
+                const container = document.getElementById('chartContainer');
+                container.innerHTML = '';
+                
+                // Haftanın başını (Pazartesi) bul
+                let curr = new Date();
+                let day = curr.getDay(); // 0 (Sun) - 6 (Sat)
+                // Pazar günü (0) ise, 6 gün geri gitmeliyiz ki önceki Pazartesi olsun.
+                // Eğer Pazartesi (1) ise, 0 gün geri. 
+                // JS'de Pazar 0 olduğu için mantığı düzeltiyoruz:
+                // Pazartesi'yi 0. index yapmak istiyoruz.
+                const diff = curr.getDate() - day + (day === 0 ? -6 : 1); 
+                const monday = new Date(curr.setDate(diff));
+
+                let weekTotal = 0;
+
+                for(let i=0; i<7; i++) {
+                    const d = new Date(monday);
+                    d.setDate(monday.getDate() + i);
+                    const dateKey = d.toISOString().split('T')[0];
+                    const val = hist[dateKey] || 0;
+                    weekTotal += val;
+
+                    // Pzt, Sal, Çar...
+                    const dayName = d.toLocaleDateString('tr-TR', {weekday:'short'});
+                    
+                    // Max bar height calculation (max 100%)
+                    // Varsayılan max 2 saat (7200sn) olsun bar fullensin
+                    let h = Math.min((val / 7200) * 100, 100);
+                    if(val > 0 && h < 10) h = 10; // Görünürlük için min yükseklik
+
+                    container.innerHTML += `
+                        <div class="bar-group">
+                            <div class="bar" style="height: ${h}%" title="${Math.floor(val/60)} dk"></div>
+                            <span class="bar-label">${dayName}</span>
+                        </div>
+                    `;
+                }
+                
+                const h = Math.floor(weekTotal/3600);
+                const m = Math.floor((weekTotal%3600)/60);
+                document.getElementById('statWeekTotal').innerText = `${h}s ${m}dk`;
+            }
+        };
+
+        window.onload = app.init;
+    </script>
+</body>
+</html>
