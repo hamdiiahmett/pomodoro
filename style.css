@@ -1,6 +1,5 @@
-/* --- RENK PALETLERİ (CSS VARIABLES) --- */
+/* --- TEMEL AYARLAR AYNI --- */
 :root {
-    /* Varsayılan: Bej Mod */
     --bg-color: #e6ded6;
     --card-bg: #f5f0eb;
     --text-main: #5d4037;
@@ -14,7 +13,6 @@
     --ring-color: #d7ccc8;
 }
 
-/* Koyu Mod (Dark Theme) */
 [data-theme="dark"] {
     --bg-color: #121212;
     --card-bg: #1e1e1e;
@@ -44,7 +42,6 @@ body {
     transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* --- HEADER --- */
 header {
     padding: 30px 20px;
     display: flex;
@@ -80,7 +77,6 @@ h1 {
 
 .theme-toggle:active { transform: scale(0.9); }
 
-/* --- MAIN --- */
 main {
     flex: 1;
     padding: 10px 20px;
@@ -140,10 +136,64 @@ main {
 .hidden { display: none !important; }
 
 /* --- TIMER --- */
+.time-presets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.time-presets button {
+    background: var(--card-bg);
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    padding: 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-dark), var(--shadow-light);
+    transition: 0.2s;
+}
+
+.time-presets button:hover, .time-presets button.active-preset {
+    background: var(--accent-color);
+    color: var(--bg-color);
+    border-color: var(--accent-color);
+}
+
+.custom-time-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.custom-time-input input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+    background: var(--card-bg);
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
+    color: var(--text-main);
+    text-align: center;
+    font-weight: bold;
+}
+
+.custom-time-input button {
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: none;
+    background: var(--card-bg);
+    color: var(--accent-color);
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: var(--shadow-dark), var(--shadow-light);
+}
+
 .timer-wrapper {
     display: flex;
     justify-content: center;
-    margin: 40px 0;
+    margin: 20px 0 30px 0;
 }
 
 .timer-circle {
@@ -234,7 +284,67 @@ textarea {
 }
 textarea:focus { outline: none; }
 
-/* --- STATS --- */
+/* --- STATS & TITLES --- */
+
+/* Tooltip Stili (Soft) */
+.tooltip-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 160px;
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Üstte göster */
+    left: 50%;
+    margin-left: -80px; /* Ortalamak için */
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    transform: translateY(10px);
+    font-size: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    pointer-events: none; /* Mouse engellemesin */
+}
+
+/* Tooltip Ok İşareti */
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--accent-color) transparent transparent transparent;
+}
+
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tomato-badge {
+    background: var(--card-bg);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    color: var(--accent-color);
+    box-shadow: var(--shadow-dark), var(--shadow-light);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1.1rem;
+}
+
 .stat-row {
     display: flex;
     justify-content: space-between;
@@ -285,7 +395,41 @@ textarea:focus { outline: none; }
     color: var(--text-muted);
 }
 
-/* --- BACK BUTTON --- */
+/* Title Cards */
+.title-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 15px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-dark), var(--shadow-light);
+    opacity: 0.4; 
+    transition: 0.3s;
+}
+
+.title-card.unlocked {
+    opacity: 1; 
+    border: 2px solid var(--accent-color);
+}
+
+.title-info h4 {
+    font-size: 1rem;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+
+.title-info p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.title-icon {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+}
+
 .back-btn {
     display: inline-flex;
     align-items: center;
@@ -297,7 +441,6 @@ textarea:focus { outline: none; }
 }
 .back-btn:hover { color: var(--accent-color); }
 
-/* --- TOAST --- */
 #toast {
     visibility: hidden;
     background: var(--text-main);
