@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#e6ded6">
     <title>POMODOMATES</title>
-    <link rel="icon" type="image/jpeg" href="resim/192.jpg">
-    <link rel="apple-touch-icon" href="resim/192.jpg">
-    <link rel="manifest" href="manifest.json">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="style.css">
+    
+    <link rel="icon" type="image/jpeg" href="resim/192.jpg">
+    <link rel="apple-touch-icon" href="resim/192.jpg">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
     <header>
-        <h1>POMODOMATES</h1>
+        <h1>POMODOMATES 🍅</h1>
         <button class="theme-toggle" onclick="app.toggleTheme()">
             <i class="fas fa-adjust"></i>
         </button>
@@ -27,7 +27,7 @@
         <section id="view-dashboard">
             <div class="welcome-text">
                 Hoş Geldin,<br>
-                <span>Baboli Mugo Pro!</span>
+                <span id="userTitle">Baboli Mugo Pro!</span>
             </div>
 
             <div class="dashboard-grid">
@@ -43,6 +43,10 @@
                     <i class="fas fa-chart-bar"></i>
                     <h3>İstatistik</h3>
                 </div>
+                <div class="card" onclick="app.router('titles')">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Unvanlar</h3>
+                </div>
             </div>
         </section>
 
@@ -51,9 +55,23 @@
                 <i class="fas fa-arrow-left"></i> Geri Dön
             </div>
             
+            <div class="time-presets">
+                <button onclick="timer.setMode(5)">5 dk</button>
+                <button onclick="timer.setMode(15)">15 dk</button>
+                <button onclick="timer.setMode(30)" class="active-preset">30 dk</button>
+                <button onclick="timer.setMode(60)">60 dk</button>
+                <button onclick="timer.setMode(90)">90 dk</button>
+                <button onclick="timer.setMode(120)">120 dk</button>
+            </div>
+            
+            <div class="custom-time-input">
+                <input type="number" id="customMin" placeholder="Özel dk" min="5">
+                <button onclick="timer.setCustom()">Ayarla</button>
+            </div>
+
             <div class="timer-wrapper">
                 <div class="timer-circle">
-                    <div class="timer-display" id="timerDisplay">25:00</div>
+                    <div class="timer-display" id="timerDisplay">30:00</div>
                 </div>
             </div>
 
@@ -62,7 +80,7 @@
                 <button id="btnPause" class="btn hidden" onclick="timer.pause()"><i class="fas fa-pause"></i> Dur</button>
                 <button id="btnFinish" class="btn" onclick="timer.finish()"><i class="fas fa-stop"></i> Bitir</button>
             </div>
-            <p style="text-align:center; margin-top:30px; color:var(--text-muted); font-size: 0.8rem; letter-spacing: 1px;">MESAİ BAŞLADI.</p>
+            <p style="text-align:center; margin-top:20px; color:var(--text-muted); font-size: 0.8rem; letter-spacing: 1px;">DOMATESLERİ TOPLA! 🍅</p>
         </section>
 
         <section id="view-planner" class="hidden">
@@ -70,11 +88,10 @@
                 <i class="fas fa-arrow-left"></i> Geri Dön
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h2>Haftalık Kölelik</h2>
+                <h2>Haftalık Plan</h2>
                 <button class="btn" style="padding: 8px 16px; font-size:0.8rem;" onclick="planner.clearAll()">Sil</button>
             </div>
-            <div id="plannerContainer">
-                </div>
+            <div id="plannerContainer"></div>
             <br>
             <button class="btn" style="width:100%; justify-content:center;" onclick="planner.save()">Kaydet</button>
         </section>
@@ -83,8 +100,15 @@
             <div class="back-btn" onclick="app.router('dashboard')">
                 <i class="fas fa-arrow-left"></i> Geri Dön
             </div>
-            <h2>Verimlilik Raporu</h2>
-            <br>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h2>Rapor</h2>
+                <div class="tomato-badge tooltip-container">
+                    🍅 <span id="tomatoCount">0</span>
+                    <span class="tooltip-text">Her yarım saatte bir domates kazanırsınız</span>
+                </div>
+            </div>
+
             <div class="stat-row">
                 <span>Bugün</span>
                 <span class="stat-val" id="statToday">0 dk</span>
@@ -94,13 +118,24 @@
                 <span class="stat-val" id="statWeekTotal">0s 0dk</span>
             </div>
 
-            <h3 style="margin-top:25px; font-size:1rem; color:var(--text-muted);">Bu Hafta (Pzt - Paz)</h3>
-            <div class="chart-container" id="chartContainer">
+            <h3 style="margin-top:25px; font-size:1rem; color:var(--text-muted);">Bu Hafta</h3>
+            <div class="chart-container" id="chartContainer"></div>
+        </section>
+
+        <section id="view-titles" class="hidden">
+            <div class="back-btn" onclick="app.router('dashboard')">
+                <i class="fas fa-arrow-left"></i> Geri Dön
+            </div>
+            <h2>Unvanlar & Hedefler 🏆</h2>
+            <p style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-muted);">Domates toplayarak rütbeni yükselt! Her yarım saatte bir domates kazan!</p>
+            
+            <div id="titlesListContainer">
                 </div>
         </section>
     </main>
 
     <div id="toast">Kaydedildi Baboli!</div>
+    <audio id="alarmSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
 
     <script src="script.js"></script>
 </body>
